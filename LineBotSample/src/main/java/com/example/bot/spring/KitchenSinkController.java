@@ -101,6 +101,7 @@ import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
 import aibot.chatBot;
+import aibot.Service.LifelogService;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import lombok.NonNull;
@@ -117,21 +118,22 @@ public class KitchenSinkController {
     private LineBlobClient lineBlobClient;
 
     chatBot chat = new chatBot();
-    final Datastore datastore = Morphia.createDatastore( "morphia_example");
-    // tell morphia where to find your classes
-    // can be called multiple times with different packages or classes
-    datastore.getMapper().mapPackage("aibot");
-    // create the Datastore connecting to the database running on the default port on the local host
-    //datastore.getDatabase().drop();
-    datastore.ensureIndexes();
 
+	// Morphiaの宣言
+    public Datastore getDatastore() {
+    	Datastore datastore = Morphia.createDatastore( "morphia_example");
+    	datastore.getMapper().mapPackage("aibot");
+    	datastore.ensureIndexes();
+
+    	return datastore;
+    }
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     @EventMapping
-    public void handleTextMessageEvent(MessageEvent<TextMessageContent> event, Datastore ds) throws Exception {
+    public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
         TextMessageContent message = event.getMessage();
-        handleTextContent(event.getReplyToken(), event, message, ds);
+        handleTextContent(event.getReplyToken(), event, message);
     }
 
     @EventMapping
@@ -374,7 +376,7 @@ public class KitchenSinkController {
     }
 
     */
-    private void handleTextContent(String replyToken, Event event, TextMessageContent content, Datastore ds)
+    private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         final String text = content.getText();
 
@@ -681,10 +683,15 @@ public class KitchenSinkController {
 
             // ここからオウム返しのプログラムが始まっているのでここをいじる
             default:
+                Datastore ds = getDatastore();
+                LifelogService lifelog = new LifelogService();
 
+                lifelog.addLifelog(ds, text, "000000");
             	var chatSession = chat.chatSession;
             	var chat_reply = chat.reply_chatText(text,chatSession);
             	this.replyTexts(replyToken, chat_reply);
+
+
 /*
             	for (int i = 0; i < chat_reply.length; i++) {
             		if (event instanceof MessageEvent) {

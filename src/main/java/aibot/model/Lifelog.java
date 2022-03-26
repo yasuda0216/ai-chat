@@ -1,7 +1,6 @@
 package aibot.model;
 
 import java.util.Date;
-import java.util.List;
 
 import org.bson.types.ObjectId;
 
@@ -16,6 +15,8 @@ public class Lifelog {
 	@Id
 	ObjectId id;
 
+	String usersSentence;
+
 	String experiencer;
 
 	String target;
@@ -23,13 +24,16 @@ public class Lifelog {
 	String aspect;
 
 	@Property("polarity")
-	Double polarity;
+	String polarity;
+
+	@Property("polarity_how")
+	String polarity_how;
 
 	@Property("polarity_terms")
-	List<String> polarityTerms;
+	String polarityTerms;
 
 	@Property("polarity_conf")
-	Double polarityConf;
+	String polarityConf;
 
 	String when;
 
@@ -37,10 +41,15 @@ public class Lifelog {
 
 	String where;
 
-	String action;
+	String response;
+
+	String stamp;
 
 	@Indexed
 	String userID;
+
+	String botType;
+
 
 	@Property ("create_date")
     @Indexed
@@ -52,6 +61,36 @@ public class Lifelog {
     @Indexed
     Date     updateDate;
 
+    long idNumber;
+
+
+    public String getBotType() {
+		return botType;
+	}
+
+
+	public void setBotType(String botType) {
+		this.botType = botType;
+	}
+
+    public String getPolarity_how() {
+		return polarity_how;
+	}
+
+
+	public void setPolarity_how(String polarity_how) {
+		this.polarity_how = polarity_how;
+	}
+
+	public long getIdNumber() {
+		return idNumber;
+	}
+
+
+	public void setIdNumber(long idNumber) {
+		this.idNumber = idNumber;
+	}
+
 
 	public ObjectId getId() {
 		return id;
@@ -60,6 +99,15 @@ public class Lifelog {
 
 	public void setId(ObjectId id) {
 		this.id = id;
+	}
+
+	public String getUsersSentence() {
+		return usersSentence;
+	}
+
+
+	public void setUsersSentence(String usersSentence) {
+		this.usersSentence = usersSentence;
 	}
 
 
@@ -93,32 +141,32 @@ public class Lifelog {
 	}
 
 
-	public Double getPolarity() {
+	public String getPolarity() {
 		return polarity;
 	}
 
 
-	public void setPolarity(Double polarity) {
+	public void setPolarity(String polarity) {
 		this.polarity = polarity;
 	}
 
 
-	public List<String> getPolarityTerms() {
+	public String getPolarityTerms() {
 		return polarityTerms;
 	}
 
 
-	public void setPolarityTerms(List<String> polarityTerms) {
+	public void setPolarityTerms(String polarityTerms) {
 		this.polarityTerms = polarityTerms;
 	}
 
 
-	public Double getPolarityConf() {
+	public String getPolarityConf() {
 		return polarityConf;
 	}
 
 
-	public void setPolarityConf(Double polarityConf) {
+	public void setPolarityConf(String polarityConf) {
 		this.polarityConf = polarityConf;
 	}
 
@@ -152,17 +200,6 @@ public class Lifelog {
 		this.where = where;
 	}
 
-
-	public String getAction() {
-		return action;
-	}
-
-
-	public void setAction(String action) {
-		this.action = action;
-	}
-
-
 	public String getUserID() {
 		return userID;
 	}
@@ -191,6 +228,27 @@ public class Lifelog {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
+
+	public String getResponse() {
+		return response;
+	}
+
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
+
+
+	public String getStamp() {
+		return stamp;
+	}
+
+
+	public void setStamp(String stamp) {
+		this.stamp = stamp;
+	}
+
+
 
 
 }

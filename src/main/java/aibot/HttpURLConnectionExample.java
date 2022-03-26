@@ -1,56 +1,49 @@
 package aibot;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.net.URLEncoder;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HttpURLConnectionExample {
 
-    private final String USER__AGENT = "Mozilla/5.0";
 
     public static void main(String[]args) throws Exception {
 
         HttpURLConnectionExample http = new HttpURLConnectionExample();
 
-        String test = "誕生日プレゼントをもらってうれしい";
+        String test = "誕生日プレゼントをもらってうれしい。";
+
         var result = http.getResult(test);
 
-        var arrays1= result.get("predictions");
-        var arrays2= result.get("raw_outputs");
+        var arrays1= result;
 
-        System.out.println(arrays1);
-        System.out.println(arrays2);
-        System.out.println("angry:" + arrays1.get("angry").intValue());
-        System.out.println("happy:" + arrays1.get("happy").intValue());
-        System.out.println("sad:" + arrays1.get("sad").intValue());
-        System.out.println("surprise:" + arrays1.get("surprise").intValue());
-        System.out.println("scared:" + arrays1.get("scared").intValue());
+        int len = arrays1.get("target").toString().length();
+        var tar = arrays1.get("target").toString().substring(1, len-1);
 
-
+        System.out.println("target:" + tar);
+        System.out.println("polarity:" + arrays1.get("polarity").doubleValue());
 
     }
 
     public JsonNode getResult(String urlString) {
     	 String result = "";
     	 JsonNode root = null;
-    	 String urlLink = "http://12fa-34-74-49-206.ngrok.io/";
+    	 String urlLink = "http://127.0.0.1:5001/slot/";
+
     	 try {
-    	    URL url = new URL(urlLink + "api/"+ urlString);
+    	    URL url = new URL(urlLink + URLEncoder.encode(urlString, "UTF-8"));
     	    HttpURLConnection con = (HttpURLConnection)url.openConnection();
     	    con.connect(); // URL接続
-    	    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    	    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(),"UTF-8"));
     	    String tmp = "";
-
-    	       while ((tmp = in.readLine()) != null) {
+    	    while ((tmp = in.readLine()) != null) {
     	        result += tmp;
     	    }
-
     	    ObjectMapper mapper = new ObjectMapper();
     	    root = mapper.readTree(result);
     	    in.close();
@@ -60,80 +53,86 @@ public class HttpURLConnectionExample {
     	 }
 
     	 return root;
-    	}
-
-   //HTTP GET request
-    private void sendGet() throws Exception {
-
-        String url = "http://www.google.com/search?q=mkyong";
-
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-       //optional default is GET
-        con.setRequestMethod("GET");
-
-       //add request header
-        con.setRequestProperty("User-Agent", USER__AGENT);
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-       //print result
-        System.out.println(response.toString());
-
     }
 
-   //HTTP POST request
-    private void sendPost() throws Exception {
+    public JsonNode getPolarity(String urlString) {
+   	 String result = "";
+   	 JsonNode root = null;
+   	 String urlLink = "http://127.0.0.1:5001/polarity/";
 
-        String url = "https://selfsolve.apple.com/wcResults.do";
-        URL obj = new URL(url);
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+   	 try {
+   	    URL url = new URL(urlLink + URLEncoder.encode(urlString, "UTF-8"));
+   	    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+   	    con.connect(); // URL接続
+   	    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(),"UTF-8"));
+   	    String tmp = "";
+   	    while ((tmp = in.readLine()) != null) {
+   	        result += tmp;
+   	    }
+   	    ObjectMapper mapper = new ObjectMapper();
+   	    root = mapper.readTree(result);
+   	    in.close();
+   	    con.disconnect();
+   	 }catch(Exception e) {
+   	    e.printStackTrace();
+   	 }
 
-       //add reuqest header
-        con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", USER__AGENT);
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+   	 return root;
+   }
 
-        String urlParameters = "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
+    public JsonNode getResponse(String urlString) {
+   	 String result = "";
+   	 JsonNode root = null;
+   	 String urlLink = "http://127.0.0.1:5001/question/";
 
-       //Send post request
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(urlParameters);
-        wr.flush();
-        wr.close();
+   	 try {
+   	    URL url = new URL(urlLink + URLEncoder.encode(urlString, "UTF-8"));
+   	    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+   	    con.connect(); // URL接続
+   	    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(),"UTF-8"));
+   	    String tmp = "";
+   	    while ((tmp = in.readLine()) != null) {
+   	        result += tmp;
+   	    }
+   	    ObjectMapper mapper = new ObjectMapper();
+   	    root = mapper.readTree(result);
+   	    in.close();
+   	    con.disconnect();
+   	 }catch(Exception e) {
+   	    e.printStackTrace();
+   	 }
 
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + urlParameters);
-        System.out.println("Response Code : " + responseCode);
+   	 return root;
+   }
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
+    public JsonNode getAizuti(String urlString) {
+      	 String result = "";
+      	 JsonNode root = null;
+      	 String urlLink = "http://127.0.0.1:5001/aizuti/";
 
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
+      	 try {
+      	    URL url = new URL(urlLink + URLEncoder.encode(urlString, "UTF-8"));
+      	    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+      	    con.connect(); // URL接続
+      	    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(),"UTF-8"));
+      	    String tmp = "";
+      	    while ((tmp = in.readLine()) != null) {
+      	        result += tmp;
+      	    }
+      	    ObjectMapper mapper = new ObjectMapper();
+      	    root = mapper.readTree(result);
+      	    in.close();
+      	    con.disconnect();
+      	 }catch(Exception e) {
+      	    e.printStackTrace();
+      	 }
 
-       //print result
-        System.out.println(response.toString());
+      	 return root;
+      }
 
-    }
 
+    private static String characterCode(String str, String chraCode) throws UnsupportedEncodingException {
+        byte[] tmp = new String(str).getBytes(chraCode);
+        return new String(tmp);
+      }
 }

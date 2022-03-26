@@ -1,6 +1,11 @@
 package aibot;
 
+import java.util.Date;
 import java.util.Scanner;
+
+import aibot.Service.LifelogService;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 
 public class Test {
 
@@ -8,31 +13,18 @@ public class Test {
 
 
 
-		/*
+		// Morphiaの宣言
 		final Datastore datastore = Morphia.createDatastore( "morphia_example");
-        // tell morphia where to find your classes
-        // can be called multiple times with different packages or classes
         datastore.getMapper().mapPackage("aibot");
-        // create the Datastore connecting to the database running on the default port on the local host
-        //datastore.getDatabase().drop();
         datastore.ensureIndexes();
 
 		Date date = new Date();
 		LifelogService lifelogServ = new LifelogService();
 		int i = 0;
 
-		final Users users = new Users();
-		users.setFirstname("kento");
-		users.setLastname("yasuda");
-		users.setUserID("000");
-		datastore.save(users);
 
-		final Employee elmer = new Employee();
-		elmer.setName("kento");
-		elmer.setSalary(10.0);
-		elmer.setUser(users);
-		datastore.save(elmer);
-		*/
+
+
 
 		chatBot chat = new chatBot();
 		var chatSession = chat.chatSession;

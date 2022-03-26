@@ -12,12 +12,16 @@
         </template>
     </category>
 
+    
+
     <category>
         <pattern>*</pattern>
         <template>
             ごめんよ,「きっくんとおしゃべりする」「きっくんに相談する」「相談窓口につなぐ」から選んでね
         </template>
     </category>
+
+    
 
 <topic name="chat_category">
     <category>
@@ -26,6 +30,14 @@
             ごめんよ,「学校」「就職」「友人関係」「アルバイト」「家族」「その他」の中から選んでほしいな
         </template>
     </category>
+
+    <category>
+        <pattern>あ</pattern>
+        <template>
+            それはいつの出来事なの？
+        </template>
+    </category>
+
 
     <category>
         <pattern>学校</pattern>
